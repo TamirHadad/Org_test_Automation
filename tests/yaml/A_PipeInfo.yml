@@ -1,16 +1,13 @@
-template: true
-valuesFilePath: ../values/gitRepoValues.yml
-
 resources:
-  - name: resource_A_Pipeinfo_gitRepo
+  - name: resource_A_Pipeinfo_git
     type: GitRepo
     configuration:
-      path: {{ .Values.GitHub.Org_test_Automation.path }}
+      path: jfbetapipeorg/Org_test_Automation
       branches:
         include: master
       gitProvider: s_gitHub
 
-  - name: resource_A_Pipeinfo_propertyBag
+  - name: resource_A_Pipeinfo_property
     type: PropertyBag
     configuration:
       commitSha: 1
@@ -23,7 +20,7 @@ pipelines:
         type: Bash
         configuration:
           inputResources:
-            - name: resource_A_Pipeinfo_gitRepo
+            - name: resource_A_Pipeinfo_git
           integrations:
             - name: s_gitHub
         execution:
@@ -58,9 +55,9 @@ pipelines:
           inputSteps:
             - name: api_pipeinfo_step2
           outputResources:
-            - name: resource_A_Pipeinfo_propertyBag
+            - name: resource_A_Pipeinfo_property
         execution:
           onExecute:
             - echo $current_runid
             - add_pipeline_variables prev_runid=$run_id
-            - write_output resource_A_Pipeinfo_propertyBag commitSha=$commitSha runID=$current_runid
+            - write_output resource_A_Pipeinfo_property commitSha=$commitSha runID=$current_runid
